@@ -1,556 +1,413 @@
-
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Venkata Raghavendra KADIYALA — Portfolio / Portfolio</title>
-<meta name="description" content="Creative portfolio of Venkata Raghavendra KADIYALA — Mechanical Engineer & Designer — bilingual (EN/FR)." />
+<title>Venkata Raghavendra KADIYALA — Portfolio</title>
+<meta name="description" content="Portfolio of Venkata Raghavendra KADIYALA — Mechanical Engineer & Creative Designer (EN / FR)" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#071226;
-    --muted:#9fb0bd;
-    --text:#eef6f8;
-    --accent1:#1dd3b0;
-    --accent2:#e6b66d;
-    --card: rgba(255,255,255,0.03);
-    --glass: rgba(255,255,255,0.02);
-    --radius:12px;
+    --bg-light:#f7f6f4;
+    --bg-mid:#e9eef0;
+    --bg-dark:#0b1116;
+    --accent-teal:#17c3a2;
+    --accent-gold:#e6b66d;
+    --muted:#6b7780;
+    --text:#071622;
+    --glass: rgba(255,255,255,0.6);
+    --radius:14px;
     --snap: y mandatory;
-    --section-gap:48px;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
   }
+
+  /* basic reset */
   *{box-sizing:border-box}
-  html,body{height:100%; margin:0; color:var(--text); background:linear-gradient(180deg,#031426,#052835); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+  html,body{height:100%; margin:0; background:linear-gradient(180deg,var(--bg-light),#eaeff1 30%, #cbd7dc 55%, var(--bg-dark)); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
   a{color:inherit; text-decoration:none}
-  /* layout: full-screen panels with scroll-snap */
+
+  /* viewport panels — full screen, snap to each center */
   .viewport{
     height:100vh;
-    width:100%;
-    overflow-y:scroll;
+    overflow-y:auto;
     scroll-snap-type: y var(--snap);
     -webkit-overflow-scrolling:touch;
   }
+
   section.panel{
     position:relative;
-    min-height:calc(100vh - 48px);
-    padding:48px;
+    min-height:100vh;
+    padding:48px 28px;
     display:flex;
     align-items:center;
     justify-content:center;
     scroll-snap-align:center;
   }
-  /* background artwork (light, behind content) */
-  .bg-art{
-    position:absolute; inset:0; z-index:0; opacity:0.16; pointer-events:none; filter: blur(8px) saturate(110%);
-  }
-  .bg-overlay{
-    position:absolute; inset:0; z-index:0; background:linear-gradient(180deg, rgba(3,8,20,0.6), rgba(4,18,26,0.6));
-    border-bottom: 1px solid rgba(255,255,255,0.02);
+
+  /* hero: white -> mid */
+  .hero {
+    background: linear-gradient(180deg, #fff 0%, #f5f6f7 50%);
   }
 
-  /* container card on each panel */
-  .card{
-    position:relative; z-index:5;
-    width:min(1100px,92%);
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,0.03);
-    padding:28px; display:grid; grid-template-columns: 1fr 420px; gap:22px; align-items:start;
-    box-shadow: 0 20px 60px rgba(2,6,18,0.6);
-    backdrop-filter: blur(6px) saturate(1.02);
+  /* mid-dark sections will use overlay */
+  .scene-dark {
+    background: linear-gradient(180deg, rgba(6,12,20,0.9), rgba(3,8,15,0.95));
+    color: #eef6f8;
   }
 
-  /* alternate layout for variety */
-  .card.alt{ grid-template-columns: 420px 1fr; }
-
-  /* left content */
-  .meta{ color:var(--muted); font-size:13px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
-  h1.title{ margin:0; font-size:22px; letter-spacing:0.4px; }
-  p.lead{ margin:8px 0 0 0; color:var(--muted); line-height:1.55; font-size:15px; }
-
-  /* right pane: subtle card with details */
-  .pane{ background:rgba(255,255,255,0.01); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.02); color:var(--muted); }
-  .pane h4{ margin:0 0 8px 0; color:var(--text) }
-
-  /* tags */
-  .tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px }
-  .tag{ padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.02); color:var(--muted); font-weight:700; font-size:13px; border:1px solid rgba(255,255,255,0.02); }
-
-  /* header for page (fixed) */
-  header.fixed{
-    position:fixed; left:24px; right:24px; top:18px; z-index:40; display:flex; justify-content:space-between; align-items:center; gap:12px;
-    pointer-events:auto;
+  /* content card centered on each panel */
+  .card {
+    position:relative;
+    width:min(1100px,94%);
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:26px;
+    align-items:center;
+    padding:28px;
+    border-radius:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+    box-shadow: 0 30px 80px rgba(16,24,32,0.12);
+    border: 1px solid rgba(20,30,40,0.04);
+    overflow:hidden;
   }
-  .brand{ display:flex; gap:12px; align-items:center; background:transparent; padding:8px 12px; border-radius:999px; }
-  .avatar{ width:56px; height:56px; border-radius:12px; background:linear-gradient(135deg,var(--accent1),var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:800; color:#072425; font-size:18px; box-shadow:0 6px 18px rgba(2,6,18,0.5); }
-  .nav{ display:flex; gap:10px; align-items:center; }
-  .nav a{ padding:8px 12px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); font-weight:700; font-size:13px }
-
-  /* transitions: each panel content slides in separately */
-  .slide-left, .slide-right, .fade-in { opacity:0; transform:translateY(16px); transition: opacity 700ms cubic-bezier(.2,.9,.2,1), transform 700ms cubic-bezier(.2,.9,.2,1); }
-  .in-viewport .slide-left { transform:translateX(0); opacity:1; transition-delay:120ms; transform:translateX(0); }
-  .in-viewport .slide-right { transform:translateX(0); opacity:1; transition-delay:220ms; transform:translateX(0); }
-  .in-viewport .fade-in { transform:translateY(0); opacity:1; transition-delay:160ms; }
-
-  /* responsive */
-  @media(max-width:980px){
-    .card, .card.alt{ grid-template-columns: 1fr; padding:18px; }
-    .pane{ order:2 }
+  .card.dark {
+    background: linear-gradient(180deg, rgba(8,12,18,0.54), rgba(6,8,12,0.36));
+    border: 1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 30px 80px rgba(1,2,6,0.6);
   }
 
-  /* subtle footer */
-  footer{ text-align:center; color:var(--muted); font-size:13px; padding:18px 8px; }
+  /* hero layout */
+  .hero .card {
+    grid-template-columns: 420px 1fr;
+    background: transparent;
+    box-shadow:none;
+    border:none;
+  }
 
-  /* decorative separator between panels */
-  .panel + .panel{ padding-top: var(--section-gap); padding-bottom: var(--section-gap); }
+  /* left column (image) */
+  .photo-wrap {
+    display:flex; align-items:center; justify-content:center;
+  }
+  .photo {
+    width:360px; height:360px; border-radius:22px; overflow:hidden;
+    border: 10px solid rgba(255,255,255,0.85);
+    box-shadow: 0 18px 60px rgba(10,20,30,0.12);
+    background: linear-gradient(135deg,var(--accent-teal),var(--accent-gold));
+  }
+  .photo img{ width:100%; height:100%; object-fit:cover; display:block; filter: contrast(105%) saturate(106%); }
 
-  /* ARIA focus outline */
-  a:focus{ outline:3px solid rgba(29,211,176,0.18); outline-offset:4px; border-radius:8px; }
+  /* right column */
+  .intro { padding:8px 4px; }
+  h1.name { margin:0; font-size:36px; line-height:1; font-weight:800; letter-spacing:0.6px; color:var(--text); }
+  .tag { margin-top:10px; color:var(--muted); font-weight:600; font-size:15px; }
+  .cta-row { margin-top:18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
+  .social-btn {
+    display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; font-weight:800; font-size:14px;
+    background:linear-gradient(90deg,var(--accent-teal),var(--accent-gold)); color:#072425; box-shadow: 0 8px 30px rgba(22,44,40,0.12);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .social-btn:hover{ transform:translateY(-6px); box-shadow: 0 20px 60px rgba(22,44,40,0.14); }
+
+  .social-ghost {
+    display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px;
+    background:transparent; border:1px solid rgba(16,24,32,0.06);
+  }
+  .contact-row { margin-top:16px; color:var(--muted); display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-weight:600; }
+
+  /* story panel: cleaner white card */
+  .story-card { grid-template-columns: 1fr; padding:42px; gap:18px; }
+  .story-card p { margin:0; color:var(--muted); line-height:1.6; font-size:16px; }
+
+  /* experience scenes use dark card */
+  .work-card { grid-template-columns: 1fr; padding:36px; gap:20px; }
+  .project {
+    display:flex; gap:16px; align-items:center; justify-content:space-between; gap:22px; flex-wrap:wrap;
+    padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  }
+  .project.dark { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+
+  .project .text { flex:1; min-width:260px; }
+  .project h3 { margin:0; font-size:20px; color:var(--text); }
+  .project p { margin:8px 0 0 0; color:var(--muted); line-height:1.5; }
+
+  .project .art {
+    width:360px; height:180px; border-radius:10px; overflow:hidden; background:linear-gradient(90deg, rgba(23,195,162,0.12), rgba(230,182,109,0.08));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .project .art img { width:100%; height:100%; object-fit:cover; opacity:0.18; filter: blur(1px) saturate(1.02); }
+
+  /* contact CTA */
+  .contact-cta {
+    display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap;
+    margin-top:14px;
+  }
+  .big-cta {
+    padding:14px 22px; border-radius:14px; font-weight:800; font-size:16px;
+    background:linear-gradient(90deg,var(--accent-teal),var(--accent-gold));
+    color:#052425; box-shadow: 0 18px 50px rgba(20,40,36,0.12);
+  }
+
+  /* slide/fade animations triggered per panel */
+  .panel .card, .panel .project, .panel .intro, .panel .photo { opacity:0; transform: translateY(24px) scale(.995); transition: opacity 700ms ease, transform 700ms cubic-bezier(.2,.95,.2,1); }
+  .panel.in-view .card, .panel.in-view .project, .panel.in-view .intro, .panel.in-view .photo { opacity:1; transform: translateY(0) scale(1); }
+
+  /* header fixed (small) */
+  header.topbar { position:fixed; top:18px; left:24px; right:24px; z-index:80; display:flex; justify-content:space-between; align-items:center; padding:6px 12px; pointer-events:auto; }
+  header.topbar .mini { display:flex; gap:12px; align-items:center; }
+  .mini .icon { width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg,var(--accent-teal),var(--accent-gold)); display:flex; align-items:center; justify-content:center; font-weight:800; color:#052425; box-shadow:0 12px 30px rgba(20,40,36,0.12); }
+
+  /* responsive tweaks */
+  @media (max-width:980px){
+    .card, .card.dark { grid-template-columns: 1fr; }
+    .hero .card { grid-template-columns: 1fr; gap:20px }
+    .photo { width:240px; height:240px; border-radius:14px; }
+    .project .art { width:100%; height:140px; }
+  }
 </style>
 </head>
 <body>
-  <!-- Fixed header with contact and social -->
-  <header class="fixed" role="banner" aria-label="Site header">
-    <div class="brand" aria-hidden="false">
-      <div class="avatar" id="avatarInitials">VR</div>
-      <div style="color:var(--text); font-weight:700;">
-        Venkata Raghavendra<br><span style="font-weight:600; color:var(--muted); font-size:13px">Ingénieur Mécanique • Mechanical Engineer</span>
+
+<!-- small floating topbar with social quick links -->
+<header class="topbar" aria-hidden="false">
+  <div class="mini">
+    <div class="icon">VR</div>
+    <div style="font-weight:700">Venkata Raghavendra KADIYALA</div>
+  </div>
+  <nav style="display:flex; gap:10px; align-items:center">
+    <a class="social-ghost" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a class="social-ghost" href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <a class="social-ghost" href="mailto:venkata.france@gmail.com">Email</a>
+  </nav>
+</header>
+
+<!-- panels container -->
+<div class="viewport" id="viewport" tabindex="0" aria-label="Portfolio panels">
+
+  <!-- HERO (panel 1) — full-screen landing -->
+  <section class="panel hero" id="panel-hero" aria-label="Hero: About me">
+    <div class="card" role="region" aria-labelledby="hero-title">
+      <div class="photo-wrap">
+        <div class="photo" aria-hidden="true">
+          <!-- place the AI-generated image file in same folder as this index.html with exactly this name -->
+          <img src="A_webpage_design_for_Venkata_Raghavendra_Kadiyala_.png" alt="Venkata Raghavendra Kadiyala portrait (AI-generated)">
+        </div>
+      </div>
+
+      <div class="intro">
+        <div id="hero-title" class="slide">
+          <h1 class="name">Venkata Raghavendra <span style="color:var(--accent-teal)">KADIYALA</span></h1>
+          <div class="tag">Mechanical Engineer • Creative Designer — Train interiors & systems</div>
+        </div>
+
+        <div class="cta-row" aria-hidden="false">
+          <a class="social-btn" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+            <!-- small LinkedIn svg -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h4v16H4zM6 2a2 2 0 110 4 2 2 0 010-4zM10 8h3.7v2.1h.1c.5-.9 1.7-2.1 3.6-2.1 3.8 0 4.5 2.5 4.5 5.7V20H18v-5.1c0-1.2 0-2.8-1.7-2.8-1.7 0-2 1.4-2 2.7V20h-4V8z" stroke="#052425" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            LinkedIn
+          </a>
+
+          <a class="social-btn" href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener noreferrer" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#052425" stroke-width="0.6"/><circle cx="12" cy="12" r="3" stroke="#052425" stroke-width="0.6"/></svg>
+            Instagram
+          </a>
+
+          <a class="social-ghost" href="tel:+33755662821" title="Call">☎ +33 7 55 66 28 21</a>
+          <a class="social-ghost" href="mailto:venkata.france@gmail.com" title="Email">✉ venkata.france@gmail.com</a>
+        </div>
+
+        <div class="contact-row" style="margin-top:20px;">
+          <div style="font-weight:800; font-size:13px; color:var(--muted)">Creative • Technical • Product thinking</div>
+          <div style="margin-left:10px;color:var(--muted);font-weight:700;">Available for collaboration</div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <nav class="nav" role="navigation" aria-label="Quick links">
-      <a href="#about">About / À propos</a>
-      <a href="#work">Work / Projets</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <!-- PANEL 2: STORY / DESCRIPTION (distinct, not visible with hero) -->
+  <section class="panel" id="panel-story" aria-label="Story: About and details">
+    <div class="card story-card" role="region" aria-labelledby="story-title">
+      <div style="grid-column:1/ -1;">
+        <div class="meta" style="justify-content:space-between;">
+          <div id="story-title" style="font-weight:800; font-size:18px">About — À propos</div>
+          <div style="color:var(--muted); font-weight:700">Light → Depth</div>
+        </div>
 
-  <!-- Main viewport: scroll-snap panels -->
-  <div class="viewport" id="viewport" tabindex="0" aria-label="Portfolio panels">
+        <h1 style="margin-top:12px; font-size:28px">I design engineering experiences that look and feel refined.</h1>
 
-    <!-- HERO / About panel -->
-    <section class="panel" id="about" aria-labelledby="aboutTitle" role="region">
-      <!-- light artistic background (procedural SVG) -->
-      <div class="bg-art" aria-hidden="true">
-        <!-- subtle geometric liquid art -->
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1">
-              <stop offset="0" stop-color="#12d3b0" stop-opacity="0.6"/>
-              <stop offset="1" stop-color="#e6b66d" stop-opacity="0.4"/>
-            </linearGradient>
-            <filter id="f1"><feGaussianBlur stdDeviation="40"/></filter>
-          </defs>
-          <g filter="url(#f1)">
-            <circle cx="280" cy="200" r="260" fill="url(#g1)"/>
-            <ellipse cx="1200" cy="300" rx="420" ry="220" fill="#6a78ff" fill-opacity="0.12"/>
-            <rect x="900" y="420" width="700" height="320" rx="40" fill="#12d3b0" fill-opacity="0.06"/>
-          </g>
-        </svg>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
+        <p style="margin-top:14px; color:var(--muted); font-size:16px; line-height:1.6">
+          English: I combine mechanical engineering and design thinking to produce robust, elegant solutions for rail and vehicle interiors.
+          I lead CAD projects (CATIA V5), coordinate suppliers, and deliver production-ready 3D models and validated assemblies. I focus on clarity, manufacturability and user experience.<br><br>
+          <em style="color:var(--muted)">Français : J’allie ingénierie mécanique et design pour produire des solutions robustes et élégantes pour l’aménagement ferroviaire et automobile.
+          Pilotage CAO (CATIA V5), coordination fournisseurs et livraison de modèles 3D prêts production. Priorité à la clarté, la fabricabilité et l’expérience utilisateur.</em>
+        </p>
 
-      <article class="card" role="article" aria-labelledby="aboutTitle">
-        <div>
-          <div class="meta slide-left">
-            <div id="aboutTitle" style="font-weight:800; color:var(--text)">About — À propos</div>
-            <div style="color:var(--muted); font-size:13px">Creative • Technical • Bilingual</div>
+        <div style="display:flex; gap:18px; margin-top:22px; flex-wrap:wrap;">
+          <div style="background:linear-gradient(180deg,#fff,#f6f6f7); padding:18px; border-radius:12px; min-width:160px; box-shadow:0 12px 30px rgba(16,24,32,0.06)">
+            <div style="font-weight:800; font-size:22px">5+</div>
+            <div style="color:var(--muted); font-weight:700">Years experience</div>
           </div>
 
-          <h1 class="title slide-left" style="margin-top:10px">I design mechanical systems that feel thoughtful — Je conçois des systèmes mécaniques pensés pour l'usage.</h1>
+          <div style="background:linear-gradient(180deg,#fff,#f6f6f7); padding:18px; border-radius:12px; min-width:160px; box-shadow:0 12px 30px rgba(16,24,32,0.06)">
+            <div style="font-weight:800; font-size:22px">M0 → M5</div>
+            <div style="color:var(--muted); font-weight:700">3D model maturity</div>
+          </div>
 
-          <p class="lead fade-in">
-            English: I blend mechanical engineering rigor with visual thinking — train interiors, part design and systems integration. I enjoy turning complex constraints into clear, elegant solutions.<br>
-            <em style="color:var(--muted)">Français: J’allie rigueur mécanique et sens du design — aménagements ferroviaires, conception de pièces et intégration système. Je transforme contraintes complexes en solutions élégantes.</em>
-          </p>
-
-          <div class="tags slide-left" aria-hidden="false" style="margin-top:18px">
-            <span class="tag">Train design</span>
-            <span class="tag">CATIA V5</span>
-            <span class="tag">FEA</span>
-            <span class="tag">Project leadership</span>
+          <div style="background:linear-gradient(180deg,#fff,#f6f6f7); padding:18px; border-radius:12px; min-width:160px; box-shadow:0 12px 30px rgba(16,24,32,0.06)">
+            <div style="font-weight:800; font-size:22px">CAD & FEA</div>
+            <div style="color:var(--muted); font-weight:700">CATIA V5 • Hyperworks</div>
           </div>
         </div>
-
-        <aside class="pane slide-right" aria-label="Contact & quick actions">
-          <h4>Contact / Contact</h4>
-          <p style="margin:6px 0 12px 0; color:var(--muted)">Email: <a href="mailto:venkata.france@gmail.com">venkata.france@gmail.com</a><br>Phone: <a href="tel:+33755662821">+33 7 55 66 28 21</a></p>
-          <p style="margin:0 0 10px 0; color:var(--muted)">LinkedIn: <a href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener">venkata-kadiyala</a><br>Instagram: <a href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener">@raghukadiyala</a></p>
-          <div style="display:flex; gap:8px; margin-top:12px">
-            <a class="tag" id="downloadCVBtn" role="button">Download CV</a>
-            <a class="tag" href="#work">See work / Voir les projets</a>
-          </div>
-        </aside>
-      </article>
-    </section>
-
-    <!-- WORK: each experience is a separate scrolling scene -->
-    <section class="panel" id="work" aria-labelledby="workTitle" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <!-- light pattern for this scene -->
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#6a78ff"/><stop offset="1" stop-color="#12d3b0"/></linearGradient><filter id="f2"><feGaussianBlur stdDeviation="60"/></filter></defs>
-          <g filter="url(#f2)">
-            <path d="M0,300 C200,120 400,420 800,260 C1200,100 1400,420 1600,300 L1600,900 L0,900 Z" fill="url(#g2)" fill-opacity="0.08"/>
-            <circle cx="1400" cy="140" r="160" fill="#e6b66d" fill-opacity="0.06"/>
-          </g>
-        </svg>
       </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
+    </div>
+  </section>
 
-      <article class="card" role="article">
-        <!-- Left: text content -->
-        <div class="slide-left">
-          <div class="meta"><strong>SEGULA — Project OSTA</strong> <span style="color:var(--muted)">March 2024 — Present</span></div>
-          <h1 class="title">Train interiors — front office design (M0 → M5)</h1>
-          <p class="lead">EN: Leading CAD deliveries for interior systems: windows, blinds, intercoms, electrical cabinets, under-seat systems. I coordinate suppliers and validate 3D models through maturity levels.<br>
-            <em style="color:var(--muted)">FR: Pilotage des livraisons CAO: fenêtres, stores, intercoms, coffrets électriques, boîtes sous siège. Coordination fournisseurs et validation modèles 3D (M0→M5).</em>
-          </p>
-          <div class="tags"><span class="tag">CATIA V5</span><span class="tag">DMA / SAM</span><span class="tag">Model maturity</span></div>
+  <!-- PANEL 3: EXPERIENCE (each project as separate block in its own panel) -->
+  <section class="panel" id="panel-experience" aria-label="Experience overview" >
+    <div class="card dark work-card" role="region" aria-labelledby="work-title">
+      <div style="grid-column:1/-1;">
+        <div class="meta" style="justify-content:space-between;">
+          <div id="work-title" style="font-weight:800; color:var(--text); font-size:18px">Work highlights — Projets</div>
+          <div style="color:var(--muted)">Selected projects, one scene at a time</div>
         </div>
-
-        <!-- Right: soft background image block (light) -->
-        <aside class="pane slide-right" aria-hidden="false" style="display:flex; align-items:center; justify-content:center;">
-          <!-- Background is subtle: replace inner <svg> with <img src="your-image.jpg" style="opacity:0.18"> to use a real image -->
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">
-            <defs><linearGradient id="traing" x1="0" x2="1"><stop offset="0" stop-color="#0fb1a3"/><stop offset="1" stop-color="#e6b66d"/></linearGradient><filter id="b"><feGaussianBlur stdDeviation="26"/></filter></defs>
-            <g filter="url(#b)"><rect x="0" y="0" width="800" height="400" rx="20" fill="url(#traing)" fill-opacity="0.16"/></g>
-            <!-- subtle vector sketch lines -->
-            <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="2" fill="none">
-              <path d="M40 300 L760 100" stroke-linecap="round"/>
-              <path d="M40 260 L760 60" stroke-linecap="round"/>
-            </g>
-          </svg>
-        </aside>
-      </article>
-    </section>
-
-    <!-- Each subsequent experience gets its own panel. Panels alternate layout and vibe. -->
-
-    <!-- BaWu panel -->
-    <section class="panel" aria-labelledby="bawuTitle" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="g3" x1="0" x2="1"><stop offset="0" stop-color="#e6b66d"/><stop offset="1" stop-color="#6a78ff"/></linearGradient><filter id="f3"><feGaussianBlur stdDeviation="48"/></filter></defs>
-          <g filter="url(#f3)"><ellipse cx="300" cy="200" rx="360" ry="180" fill="url(#g3)" fill-opacity="0.08"/><rect x="900" y="320" width="580" height="300" rx="36" fill="#12d3b0" fill-opacity="0.04"/></g>
-        </svg>
       </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
 
-      <article class="card alt" role="article">
-        <div class="pane slide-left" style="display:flex;align-items:center;justify-content:center">
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs><filter id="f4"><feGaussianBlur stdDeviation="28"/></filter></defs>
-            <g filter="url(#f4)"><rect width="800" height="400" rx="20" fill="#6a78ff" fill-opacity="0.12"/></g>
-            <g stroke="#fff" stroke-opacity="0.06"><path d="M80 320 L720 120" stroke-width="2"/></g>
-          </svg>
+      <!-- Project 1 -->
+      <div class="project" style="margin-top:12px;">
+        <div class="text">
+          <h3 style="color:var(--text)">SEGULA — Project OSTA (Front Office)</h3>
+          <p>Lead interior design integration: windows, blinds, intercoms, electrical cabinets and under-seat systems. Deliver validated 3D models for supplier integration (M0→M5).</p>
         </div>
-
-        <div class="slide-right">
-          <div class="meta"><strong>SEGULA — BaWu</strong> <span style="color:var(--muted)">May 2023 — Feb 2024</span></div>
-          <h1 class="title">Design validation & QA — integration focus</h1>
-          <p class="lead">EN: 3D validation workflows, preventing integration issues and managing model QA with KPI/OIL tracking for smooth industrial handover.<br>
-            <em style="color:var(--muted)">FR: Validation 3D, prévention des problèmes d’intégration, gestion QA et suivi KPI/OIL pour transfert industriel.</em>
-          </p>
-          <div class="tags"><span class="tag">Quality</span><span class="tag">OIL / KPI</span><span class="tag">CAD governance</span></div>
+        <div class="art" aria-hidden="true">
+          <!-- soft background art: use an image later for better realism -->
+          <img src="A_webpage_design_for_Venkata_Raghavendra_Kadiyala_.png" alt="soft train art">
         </div>
-      </article>
-    </section>
-
-    <!-- RER NG panel -->
-    <section class="panel" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="g4"><stop offset="0" stop-color="#7aa0ff"/><stop offset="1" stop-color="#12d3b0"/></linearGradient><filter id="f5"><feGaussianBlur stdDeviation="36"/></filter></defs>
-          <g filter="url(#f5)"><rect x="0" y="120" width="1600" height="500" rx="40" fill="url(#g4)" fill-opacity="0.06"/></g>
-        </svg>
       </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
 
-      <article class="card" role="article">
-        <div>
-          <div class="meta"><strong>SEGULA — RER NG</strong> <span style="color:var(--muted)">Mar 2023 — Apr 2023</span></div>
-          <h1 class="title">Change requests & surveys — on-site work</h1>
-          <p class="lead">EN: Requirements analysis, on-site surveys and structural part design in CATIA V5 with criticality reporting.<br>
-            <em style="color:var(--muted)">FR: Étude cahier des charges, surveys sur site, conception sous CATIA V5 et rapport de criticité.</em>
-          </p>
-          <div class="tags"><span class="tag">Survey</span><span class="tag">CATIA V5</span></div>
+      <!-- Project 2 -->
+      <div class="project" style="margin-top:18px;">
+        <div class="text">
+          <h3 style="color:var(--text)">SEGULA — BaWu (Validation & QA)</h3>
+          <p>3D validation workflows, identification and prevention of integration issues, KPI and OIL tracking for quality handover.</p>
         </div>
-
-        <aside class="pane" aria-hidden="false">
-          <!-- small art -->
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs><filter id="f6"><feGaussianBlur stdDeviation="22"/></filter></defs>
-            <g filter="url(#f6)"><rect width="800" height="400" rx="20" fill="#12d3b0" fill-opacity="0.08"/></g>
-          </svg>
-        </aside>
-      </article>
-    </section>
-
-    <!-- DSB panel -->
-    <section class="panel" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><filter id="f7"><feGaussianBlur stdDeviation="30"/></filter></defs>
-          <g filter="url(#f7)"><rect x="120" y="120" width="1200" height="500" rx="40" fill="#e6b66d" fill-opacity="0.06"/></g>
-        </svg>
+        <div class="art" aria-hidden="true">
+          <img src="A_webpage_design_for_Venkata_Raghavendra_Kadiyala_.png" alt="soft design art">
+        </div>
       </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
 
-      <article class="card alt" role="article">
-        <div class="pane">
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs><filter id="f8"><feGaussianBlur stdDeviation="20"/></filter></defs>
-            <g filter="url(#f8)"><rect width="800" height="400" rx="20" fill="#6a78ff" fill-opacity="0.08"/></g>
-          </svg>
+      <!-- Project 3 -->
+      <div class="project" style="margin-top:18px;">
+        <div class="text">
+          <h3 style="color:var(--text)">SNCF — FEA & Automation</h3>
+          <p>FEA, automation of bolted assemblies (TCL), static & non-static analyses for seat supports and validation using Hyperworks/Optistruct.</p>
         </div>
-
-        <div>
-          <div class="meta"><strong>SEGULA — DSB</strong> <span style="color:var(--muted)">Jan 2022 — Feb 2023</span></div>
-          <h1 class="title">Interior layout & integration — seats, cantilevers</h1>
-          <p class="lead">EN: Seat layouts, under-seat boxes, cantilever & ceiling integration — full 3D/2D/FTA modelling to support supplier integration.<br>
-            <em style="color:var(--muted)">FR: Agencement sièges, boîtes sous siège, intégration cantilevers/plafonds — modélisation 3D/2D/FTA et support fournisseur.</em>
-          </p>
-          <div class="tags"><span class="tag">Seats</span><span class="tag">Integration</span></div>
+        <div class="art" aria-hidden="true">
+          <img src="A_webpage_design_for_Venkata_Raghavendra_Kadiyala_.png" alt="soft engineering art">
         </div>
-      </article>
-    </section>
-
-    <!-- SNCF panel -->
-    <section class="panel" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><filter id="f9"><feGaussianBlur stdDeviation="40"/></filter></defs>
-          <g filter="url(#f9)"><rect x="0" y="220" width="1600" height="360" rx="40" fill="#12d3b0" fill-opacity="0.05"/></g>
-        </svg>
       </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
 
-      <article class="card" role="article">
-        <div>
-          <div class="meta"><strong>SNCF</strong> <span style="color:var(--muted)">Apr 2021 — Oct 2021</span></div>
-          <h1 class="title">FEA & automation — Hyperworks / Optistruct</h1>
-          <p class="lead">EN: Automated bolted assemblies (TCL), mesh & static/non-static analysis for seat supports and validation of structure performance.<br>
-            <em style="color:var(--muted)">FR: Automatisation des assemblages, maillages et analyses statiques/non-statiques pour supports de sièges, validation structurelle.</em>
-          </p>
-          <div class="tags"><span class="tag">Hyperworks</span><span class="tag">Optistruct</span><span class="tag">TCL</span></div>
+    </div>
+  </section>
+
+  <!-- PANEL 4: CALL TO ACTION / CONTACT -->
+  <section class="panel" id="panel-contact" aria-label="Contact">
+    <div class="card dark" role="region" aria-labelledby="contact-title">
+      <div style="grid-column:1/-1;">
+        <div class="meta" style="justify-content:space-between;">
+          <div id="contact-title" style="font-weight:800; color:var(--text); font-size:18px">Let's build something exceptional — Parlons</div>
+          <div style="color:var(--muted)">Reach out — Contactez-moi</div>
         </div>
-
-        <aside class="pane">
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs><filter id="f10"><feGaussianBlur stdDeviation="18"/></filter></defs>
-            <g filter="url(#f10)"><rect width="800" height="400" rx="20" fill="#6a78ff" fill-opacity="0.08"/></g>
-          </svg>
-        </aside>
-      </article>
-    </section>
-
-    <!-- LAMIH panel -->
-    <section class="panel" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="g5"><stop offset="0" stop-color="#fda085"/><stop offset="1" stop-color="#12d3b0"/></linearGradient><filter id="f11"><feGaussianBlur stdDeviation="40"/></filter></defs>
-          <g filter="url(#f11)"><ellipse cx="400" cy="220" rx="380" ry="160" fill="url(#g5)" fill-opacity="0.06"/></g>
-        </svg>
       </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
 
-      <article class="card alt" role="article">
-        <div class="pane">
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
-            <defs><filter id="f12"><feGaussianBlur stdDeviation="26"/></filter></defs>
-            <g filter="url(#f12)"><rect width="800" height="400" rx="20" fill="#e6b66d" fill-opacity="0.08"/></g>
-          </svg>
-        </div>
-
-        <div>
-          <div class="meta"><strong>LAMIH</strong> <span style="color:var(--muted)">Sep 2019 — Jan 2020</span></div>
-          <h1 class="title">Behavioural analysis & safety concepts</h1>
-          <p class="lead">EN: Accident analysis, signalling automation proposals (ETCS / CBTC), and prevention measures for improved safety.<br>
-            <em style="color:var(--muted)">FR: Analyse d'accidents, propositions d'automatisation signalisation (ETCS / CBTC) et mesures de prévention.</em>
-          </p>
-          <div class="tags"><span class="tag">ETCS</span><span class="tag">Safety</span></div>
-        </div>
-      </article>
-    </section>
-
-    <!-- PM DIMENSIONS panel -->
-    <section class="panel" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><filter id="f13"><feGaussianBlur stdDeviation="28"/></filter></defs>
-          <g filter="url(#f13)"><rect x="220" y="180" width="1160" height="420" rx="40" fill="#6a78ff" fill-opacity="0.06"/></g>
-        </svg>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-
-      <article class="card">
-        <div>
-          <div class="meta"><strong>PM DIMENSIONS</strong> <span style="color:var(--muted)">Jun 2018 — Aug 2019</span></div>
-          <h1 class="title">Part design & prototyping — production-ready models</h1>
-          <p class="lead">EN: 3D part design for automotive suppliers, prototype development, and verification for client conformity (Hyundai).<br>
-            <em style="color:var(--muted)">FR: Conception pièces, prototypes et vérification conformité client (Hyundai).</em>
-          </p>
-          <div class="tags"><span class="tag">Prototyping</span><span class="tag">CATIA V5</span></div>
-        </div>
-
-        <aside class="pane">
-          <svg width="100%" height="220" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
-            <defs><filter id="f14"><feGaussianBlur stdDeviation="30"/></filter></defs>
-            <g filter="url(#f14)"><rect width="800" height="400" rx="20" fill="#e6b66d" fill-opacity="0.06"/></g>
-          </svg>
-        </aside>
-      </article>
-    </section>
-
-    <!-- Internship panel -->
-    <section class="panel" id="skills" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><filter id="f15"><feGaussianBlur stdDeviation="32"/></filter></defs>
-          <g filter="url(#f15)"><rect x="0" y="160" width="1600" height="520" rx="40" fill="#12d3b0" fill-opacity="0.04"/></g>
-        </svg>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-
-      <article class="card">
-        <div>
-          <div class="meta"><strong>Indian Railways (intern)</strong> <span style="color:var(--muted)">Mar 2016 — Jul 2016</span></div>
-          <h1 class="title">Prototype coupling & maintenance optimisation</h1>
-          <p class="lead">EN: Coupling prototype development, inspections, maintenance optimisation and Ansys-based structural analysis.<br>
-            <em style="color:var(--muted)">FR: Développement prototype couplage, inspection wagons, optimisation maintenance et analyses Ansys.</em>
-          </p>
-          <div class="tags"><span class="tag">Ansys</span><span class="tag">Maintenance</span></div>
-        </div>
-
-        <aside class="pane">
-          <h4 style="margin:0 0 8px 0">Skills — Compétences</h4>
-          <div style="color:var(--muted); font-size:14px">
-            CATIA V5 • DMA 2.3/2.2 • SAM / CDS Interiors • Ansys • Hyperworks / Optistruct • SolidWorks • Autocad • PDM • C, Java, TCL
-            <div style="margin-top:10px">
-              <strong style="color:var(--text)">Languages:</strong><br>
-              English (Bilingual) • Hindi (Native) • Telugu (Native) • Français (B1/B2)
-            </div>
-          </div>
-        </aside>
-      </article>
-    </section>
-
-    <!-- Contact panel -->
-    <section class="panel" id="contact" aria-labelledby="contactTitle" role="region">
-      <div class="bg-art" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs><filter id="f16"><feGaussianBlur stdDeviation="36"/></filter></defs>
-          <g filter="url(#f16)"><ellipse cx="900" cy="240" rx="520" ry="210" fill="#6a78ff" fill-opacity="0.06"/></g>
-        </svg>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-
-      <article class="card" role="article" aria-labelledby="contactTitle">
-        <div>
-          <div class="meta"><div id="contactTitle" style="font-weight:800">Contact — Contact</div><div style="color:var(--muted)">Let's connect</div></div>
-          <h1 class="title">Reach out — Parlons</h1>
-          <p class="lead">Email: <a href="mailto:venkata.france@gmail.com">venkata.france@gmail.com</a> — Phone: <a href="tel:+33755662821">+33 7 55 66 28 21</a></p>
-          <p class="lead" style="margin-top:8px; color:var(--muted)">LinkedIn: <a href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank">venkata-kadiyala</a> • Instagram: <a href="https://www.instagram.com/raghukadiyala/" target="_blank">@raghukadiyala</a></p>
-          <div style="margin-top:16px; display:flex; gap:12px">
-            <a class="tag" href="mailto:venkata.france@gmail.com">Email</a>
-            <a class="tag" href="tel:+33755662821">Call</a>
-            <a class="tag" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank">LinkedIn</a>
+      <div style="display:flex; gap:22px; align-items:center; justify-content:space-between; width:100%; flex-wrap:wrap;">
+        <div style="flex:1; min-width:280px;">
+          <h2 style="margin:0; color:var(--text)">Get in touch</h2>
+          <p style="color:var(--muted); margin-top:8px">Email: <a href="mailto:venkata.france@gmail.com">venkata.france@gmail.com</a><br>Phone: <a href="tel:+33755662821">+33 7 55 66 28 21</a></p>
+          <div class="contact-cta">
+            <a class="big-cta" href="mailto:venkata.france@gmail.com">Email me</a>
+            <a class="social-btn" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="social-btn" href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener">Instagram</a>
           </div>
         </div>
 
-        <aside class="pane" style="display:flex; align-items:center; justify-content:center">
-          <div style="text-align:center">
-            <div style="font-weight:800; font-size:40px; margin-bottom:6px">VR</div>
-            <div style="color:var(--muted)">Creative designer • Mechanical engineer</div>
-            <div style="margin-top:12px; color:var(--muted); font-size:13px">Available for freelance & collaborations</div>
+        <aside style="width:360px; min-width:240px;">
+          <div style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px; border-radius:12px; text-align:center;">
+            <div style="font-weight:800; font-size:20px">Available for hire</div>
+            <div style="color:var(--muted); margin-top:8px">Freelance and collaboration — open to product-focused roles</div>
+            <div style="margin-top:16px; color:var(--muted); font-size:13px">© <span id="year"></span> Venkata Raghavendra KADIYALA</div>
           </div>
         </aside>
-      </article>
-    </section>
+      </div>
 
-    <footer role="contentinfo">© <span id="yr"></span> Venkata Raghavendra KADIYALA — Portfolio (EN / FR).</footer>
-  </div>
+    </div>
+  </section>
+
+</div>
 
 <script>
   // set year
-  document.getElementById('yr').textContent = new Date().getFullYear();
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  // helper: scroll-based intersection for per-panel reveal
+  // IntersectionObserver to toggle .in-view per panel (panel-level animations)
   (function(){
-    const panels = document.querySelectorAll('section.panel');
+    const panels = document.querySelectorAll('.panel');
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){
-          entry.target.classList.add('in-viewport');
+          entry.target.classList.add('in-view');
         } else {
-          // keep visible once entered so animations don't re-hide
-          // (optional: if you want repeat toggling, uncomment next line)
-          //entry.target.classList.remove('in-viewport');
+          // keep once visible — this prevents panels from flickering on small scrolls
+          // entry.target.classList.remove('in-view');
         }
       });
-    }, { threshold: 0.25 });
+    }, { threshold: 0.45 });
 
     panels.forEach(p => io.observe(p));
   })();
 
-  // smooth keyboard & wheel navigation: snap to next panel on wheel / arrow key
+  // Smooth wheel snapping between panels (makes experience feel like "one-panel at a time")
   (function(){
     const viewport = document.getElementById('viewport');
     let isThrottled = false;
     function snapTo(direction){
-      const panels = Array.from(document.querySelectorAll('section.panel'));
-      const currentIndex = panels.findIndex(s => s.getBoundingClientRect().top >= -10 && s.getBoundingClientRect().top < window.innerHeight/2);
-      let targetIndex = currentIndex;
-      if(direction === 'next') targetIndex = Math.min(panels.length-1, currentIndex+1);
-      if(direction === 'prev') targetIndex = Math.max(0, currentIndex-1);
-      if(targetIndex !== currentIndex) {
-        panels[targetIndex].scrollIntoView({behavior:'smooth', block:'center'});
-      }
+      const panels = Array.from(document.querySelectorAll('.panel'));
+      // find the panel whose center is closest to viewport center
+      const viewportCenter = viewport.scrollTop + (viewport.clientHeight / 2);
+      let closestIndex = 0;
+      let closestDist = Infinity;
+      panels.forEach((p, i) => {
+        const rect = p.getBoundingClientRect();
+        const center = p.offsetTop + (rect.height/2);
+        const dist = Math.abs(center - viewportCenter);
+        if(dist < closestDist){ closestDist = dist; closestIndex = i; }
+      });
+      let targetIndex = closestIndex;
+      if(direction === 'next') targetIndex = Math.min(panels.length - 1, closestIndex + 1);
+      if(direction === 'prev') targetIndex = Math.max(0, closestIndex - 1);
+      if(targetIndex !== closestIndex) panels[targetIndex].scrollIntoView({behavior:'smooth', block:'center'});
     }
 
     viewport.addEventListener('wheel', (e) => {
       if(isThrottled) return;
       isThrottled = true;
-      setTimeout(()=> isThrottled=false, 300);
+      setTimeout(()=> isThrottled=false, 420);
       if(e.deltaY > 10) snapTo('next');
       else if(e.deltaY < -10) snapTo('prev');
     }, {passive:true});
 
+    // keyboard navigation
     window.addEventListener('keydown', (e) => {
       if(e.key === 'ArrowDown') snapTo('next');
       if(e.key === 'ArrowUp') snapTo('prev');
-      if(e.key === 'Home') document.querySelector('section.panel').scrollIntoView({behavior:'smooth'});
-      if(e.key === 'End') document.querySelectorAll('section.panel')[document.querySelectorAll('section.panel').length-1].scrollIntoView({behavior:'smooth'});
+      if(e.key === 'Home') document.querySelector('.panel').scrollIntoView({behavior:'smooth', block:'center'});
+      if(e.key === 'End') document.querySelectorAll('.panel')[document.querySelectorAll('.panel').length-1].scrollIntoView({behavior:'smooth', block:'center'});
     });
   })();
 
-  // Download CV (simple text file; replace with your hosted PDF if available)
-  document.getElementById('downloadCVBtn').addEventListener('click', function(e){
-    e.preventDefault();
-    const text = [
-      "Venkata Raghavendra KADIYALA",
-      "Mechanical Engineer & Designer",
-      "",
-      "Email: venkata.france@gmail.com",
-      "Phone: +33 7 55 66 28 21",
-      "",
-      "Portfolio: see online"
-    ].join("\n");
-    const blob = new Blob([text], {type:'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'Venkata_KADIYALA_CV.txt';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  });
-
-  // Accessibility: focus first link on load
+  // Accessibility: make header quick links focusable and announce on load
   window.addEventListener('load', () => {
-    const first = document.querySelector('header.fixed a');
-    if(first) first.setAttribute('tabindex','0');
+    const firstLink = document.querySelector('header.topbar a');
+    if(firstLink) firstLink.setAttribute('tabindex','0');
   });
 </script>
 </body>
