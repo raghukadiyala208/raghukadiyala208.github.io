@@ -8,361 +8,394 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-light:#ffffff;
-    --bg-mid:#f3f6f8;
-    --bg-dark:#071219;
+    --white:#ffffff;
+    --muted:#6f7b82;
     --accent-teal:#17c3a2;
     --accent-gold:#e6b66d;
-    --muted:#667076;
-    --text-dark:#071622;
+    --linkedin:#0077b5;
     --snap-duration:700ms;
-    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    --font:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
   }
   *{box-sizing:border-box}
-  html,body{height:100%; margin:0; background:linear-gradient(180deg,var(--bg-light),var(--bg-mid)); color:var(--text-dark); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+  html,body{height:100%; margin:0; font-family:var(--font); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background:#fff; color:#071622}
   a{color:inherit; text-decoration:none}
-  /* container intentionally fills screen and disables default scroll-jank */
-  body, #app { height:100vh; overflow:hidden; }
-
-  /* Panel system: panels stacked vertically but only one is visible at a time */
-  .panels { position:relative; height:100vh; width:100%; }
-  section.panel {
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:40px;
-    opacity:0;
-    transform: translateY(20px) scale(.995);
+  /* App is single-view; panels are absolute and we show one at a time */
+  #app { height:100vh; width:100vw; overflow:hidden; position:relative; }
+  .panel {
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    /* start hidden */
+    opacity:0; transform: translateY(30px) scale(.996); pointer-events:none;
     transition: opacity var(--snap-duration) cubic-bezier(.2,.9,.2,1), transform var(--snap-duration) cubic-bezier(.2,.9,.2,1);
-    pointer-events:none;
-    will-change:opacity, transform;
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
+    will-change: opacity, transform;
+    overflow:hidden;
   }
-  /* active panel will be visible */
-  section.panel.active {
-    opacity:1;
-    transform: translateY(0) scale(1);
-    pointer-events:auto;
-    z-index:10;
+  .panel.active { opacity:1; transform: translateY(0) scale(1); pointer-events:auto; z-index:20; }
+
+  /* Stage: full-bleed content centered */
+  .stage { width:100%; max-width:1400px; margin:0 auto; padding:40px; height:100%; display:flex; align-items:center; justify-content:center; position:relative; }
+
+  /* HERO */
+  .hero { background: linear-gradient(180deg,#fff,#fbfbfd); }
+  .hero-inner { text-align:center; display:flex; flex-direction:column; gap:28px; align-items:center; }
+  .portrait {
+    width:380px; height:540px; /* portrait taller to feel floating "in air" */
+    background:transparent; overflow:visible; display:block; transform:translateY(-6px);
+    filter: drop-shadow(0 32px 60px rgba(7,20,34,0.12));
+    will-change:transform;
   }
+  .portrait img{ width:auto; height:100%; display:block; margin:0 auto; object-fit:contain; background:transparent; }
+  /* make portrait float slightly */
+  .portrait.float { animation: floaty 6s ease-in-out infinite; }
+  @keyframes floaty { 0%{ transform: translateY(-6px) } 50%{ transform: translateY(8px) } 100%{ transform: translateY(-6px) } }
 
-  /* small nav bar fixed top-right */
-  .topbar {
-    position:fixed; top:18px; right:24px; z-index:60; display:flex; gap:10px; align-items:center;
-    background:rgba(255,255,255,0.75); padding:6px 10px; border-radius:999px; box-shadow:0 10px 30px rgba(8,12,18,0.08);
-    backdrop-filter: blur(6px);
-  }
-  .topbar.dark { background:rgba(6,8,12,0.7); color:#eef6f8; }
+  .hero-name { font-weight:900; font-size:clamp(44px, 8vw, 110px); letter-spacing:-1px; line-height:0.88; text-transform:uppercase; margin:0; }
+  .hero-tag { font-weight:700; color:var(--muted); margin-top:6px; font-size:18px; }
 
-  /* social buttons - natural colors */
-  .btn-linkedin{
-    display:inline-flex; gap:8px; align-items:center; padding:10px 14px; border-radius:10px; color:white; font-weight:700;
-    background:#0077b5; box-shadow:0 8px 22px rgba(0,119,181,0.18);
-  }
-  .btn-instagram{
-    display:inline-flex; gap:8px; align-items:center; padding:10px 14px; border-radius:10px; color:white; font-weight:700;
-    background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);
-    box-shadow:0 8px 22px rgba(150,43,191,0.12);
-  }
-  .btn-ghost{ display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border-radius:8px; background:transparent; border:1px solid rgba(0,0,0,0.06); font-weight:700; }
+  /* social buttons natural brand colors */
+  .social-row { display:flex; gap:14px; align-items:center; justify-content:center; margin-top:12px; flex-wrap:wrap; }
+  .btn { display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:14px; font-weight:800; cursor:pointer; box-shadow:0 18px 50px rgba(10,20,28,0.08); }
+  .btn.linkedin { background:var(--linkedin); color:white; }
+  .btn.instagram { background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); color:white; }
+  .btn.contact { background:linear-gradient(90deg,var(--accent-teal),var(--accent-gold)); color:#072425; }
 
-  /* content centering for product-style reveal (full-screen) */
-  .stage { width:100%; max-width:1400px; margin:0 auto; height:100%; display:flex; align-items:center; justify-content:center; position:relative; padding:28px; }
+  /* About panel: light card style */
+  .about-card { width:100%; max-width:1100px; background:#fff; border-radius:16px; padding:46px; box-shadow:0 30px 80px rgba(8,12,18,0.06); display:grid; grid-template-columns:1fr 420px; gap:28px; align-items:center; }
+  .about-text h2{ margin:0; font-size:32px; font-weight:900; }
+  .about-text p{ margin-top:14px; color:var(--muted); line-height:1.7; font-size:16px; }
+  .highlights { display:flex; gap:18px; margin-top:20px; flex-wrap:wrap; }
+  .stat { background:linear-gradient(180deg,#fff,#f6f7f8); padding:16px; min-width:140px; border-radius:12px; text-align:center; box-shadow:0 12px 36px rgba(10,18,24,0.06); }
+  .stat .num { font-weight:900; font-size:20px; }
 
-  /* HERO specifics */
-  .hero-inner { text-align:center; display:flex; flex-direction:column; align-items:center; gap:28px; }
-  .portrait { width:360px; height:360px; border-radius:50%; overflow:hidden; background:transparent; box-shadow: 0 30px 80px rgba(8,12,18,0.12); }
-  .portrait img{ width:100%; height:100%; object-fit:cover; display:block; background:transparent; }
+  /* Work panels: full-screen background image + centered text block */
+  .work-stage { width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; }
+  .work-bg { position:absolute; inset:0; background-size:cover; background-position:center; transform:scale(1.04); transition: transform 1200ms ease; will-change:transform; }
+  .work-stage.active .work-bg { transform:scale(1); }
+  .work-card { position:relative; z-index:5; max-width:980px; padding:28px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); color:#fff; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+  .work-title { font-size:38px; font-weight:900; margin:0 0 6px 0; text-shadow:0 12px 36px rgba(0,0,0,0.6); }
+  .work-sub { font-weight:700; opacity:0.92; margin-bottom:12px; }
+  .work-desc { line-height:1.6; opacity:0.95; font-size:18px; }
 
-  .hero-name {
-    font-weight:900;
-    font-size:clamp(40px, 8vw, 110px);
-    line-height:0.88;
-    margin:0;
-    letter-spacing: -1px;
-    color:var(--text-dark);
-    text-transform:uppercase;
-  }
-  .hero-sub { font-weight:700; color:var(--muted); font-size:18px; margin-top:6px; }
+  /* Skill & Education panels */
+  .full-card { width:100%; max-width:980px; padding:36px; border-radius:12px; background:linear-gradient(180deg,#fff,#fbfbfd); box-shadow:0 30px 80px rgba(8,12,18,0.06); text-align:center; }
+  .grid-tiles { display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
 
-  /* large spacer to ensure no adjacent content shows — but we hide others fully via JS */
-  .spacer { height:120px; }
+  /* Contact final */
+  .contact-panel { display:flex; flex-direction:column; gap:18px; align-items:center; justify-content:center; text-align:center; color:#eef6f8; }
+  .contact-panel h2 { font-size:36px; font-weight:900; margin:0; }
 
-  /* About / Story panel */
-  .story-card {
-    width:100%; max-width:1000px; background:linear-gradient(180deg,#ffffff,#fbfcfd); border-radius:18px; padding:42px; box-shadow:0 30px 80px rgba(8,12,18,0.06);
-  }
-  .story-grid { display:grid; grid-template-columns:1fr 380px; gap:28px; align-items:center; }
-  .story-grid p { color:var(--muted); line-height:1.7; font-size:16px; }
-
-  /* Work panels: big bold title + subtitle, image on background (sharp, not blurred) */
-  .work-content { text-align:left; color:white; max-width:980px; margin:0 auto; padding:22px; background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.0)); border-radius:12px; }
-  .work-title { font-weight:900; font-size:44px; margin:0 0 10px 0; color: #fff; text-shadow:0 10px 30px rgba(0,0,0,0.5); }
-  .work-sub { color:rgba(255,255,255,0.9); font-weight:700; margin-bottom:12px; }
-  .work-desc { color:rgba(255,255,255,0.92); line-height:1.6; font-size:18px; }
-
-  /* Contact panel */
-  .contact-card { text-align:center; max-width:900px; padding:36px; border-radius:18px; background:linear-gradient(180deg, rgba(3,6,10,0.9), rgba(6,8,12,0.95)); color:#eef6f8; box-shadow:0 40px 100px rgba(0,0,0,0.6); }
-  .contact-card h2 { font-size:34px; margin:0 0 8px 0; font-weight:900; }
-
-  /* Accessibility focus and outlines */
-  a:focus, button:focus { outline:3px solid rgba(23,195,162,0.16); outline-offset:4px; border-radius:8px; }
+  /* make transitions feel product-like when panels change */
+  .panel.hide-when-active { pointer-events:none; }
 
   /* responsive */
   @media (max-width:980px){
-    .portrait{ width:200px; height:200px; }
-    .story-grid{ grid-template-columns:1fr; }
-    .hero-name{ font-size:clamp(32px,10vw,72px); }
-    .work-title{ font-size:32px; }
+    .portrait{ width:260px; height:370px; }
+    .about-card { grid-template-columns:1fr; padding:28px; }
+    .hero-name { font-size: clamp(36px, 12vw, 64px); }
+    .work-title { font-size:30px; }
   }
 </style>
 </head>
 <body>
-<div id="app">
-  <!-- small topbar with brand social - color adapts -->
-  <div id="topbar" class="topbar" aria-hidden="false">
-    <a href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener" class="btn-linkedin" aria-label="LinkedIn">
-      <!-- LinkedIn icon -->
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h4v16H4zM6 2a2 2 0 110 4 2 2 0 010-4zM10 8h3.7v2.1h.1c.5-.9 1.7-2.1 3.6-2.1 3.8 0 4.5 2.5 4.5 5.7V20H18v-5.1c0-1.2 0-2.8-1.7-2.8-1.7 0-2 1.4-2 2.7V20h-4V8z" stroke="white" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
-      LinkedIn
-    </a>
-    <a href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener" class="btn-instagram" aria-label="Instagram">
-      <!-- Instagram icon -->
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="white" opacity="0.0"/><circle cx="12" cy="12" r="3" stroke="white" stroke-width="1.2"/></svg>
-      Instagram
-    </a>
+<div id="app" aria-live="polite">
+  <!-- top-right small contact quick -->
+  <div style="position:fixed;top:18px;right:18px;z-index:60;display:flex;gap:10px;align-items:center">
+    <a class="btn linkedin" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
+    <a class="btn instagram" href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
   </div>
 
-  <!-- Panels -->
-  <div class="panels" id="panels" aria-live="polite">
-    <!-- Panel 1: HERO -->
-    <section id="panel-1" class="panel active" role="region" aria-label="Hero: Venkata">
-      <!-- Hero background: very light -->
-      <div class="stage" style="justify-content:center; align-items:center;">
-        <div class="hero-inner" role="main">
-          <div class="portrait" aria-hidden="false">
-            <!-- Replace with your transparent portrait file named "photo.png" in same folder -->
-            <img src="photo.png" alt="Venkata Raghavendra Kadiyala portrait" id="portraitImg" loading="eager">
-          </div>
-
-          <h1 class="hero-name" aria-label="Full name">VENKATA RAGHAVENDRA <span style="color:var(--accent-teal)">KADIYALA</span></h1>
-          <div class="hero-sub">Mechanical Engineer &amp; Creative Designer — Train interiors • Systems • CAD</div>
-
-          <div style="display:flex; gap:14px; margin-top:18px; justify-content:center; align-items:center;">
-            <a class="btn-linkedin" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener">LinkedIn</a>
-            <a class="btn-instagram" href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener">Instagram</a>
-          </div>
-
-          <div style="margin-top:18px; color:var(--muted); font-weight:700">☎ +33 7 55 66 28 21 &nbsp; • &nbsp; ✉ <a href="mailto:venkata.france@gmail.com">venkata.france@gmail.com</a></div>
+  <!-- Panels: one per experience + hero + about + skills + education + contact -->
+  <!-- Panel index order below: 0 hero, 1 about, 2 SEGULA OSTA, 3 SEGULA BaWu, 4 SEGULA RER NG, 5 SEGULA DSB, 6 SNCF, 7 LAMIH, 8 PM DIMENSIONS, 9 Indian Railways, 10 Education, 11 Skills, 12 Contact -->
+  <section id="p-0" class="panel active hero" role="region" aria-label="Hero panel">
+    <div class="stage">
+      <div class="hero-inner" aria-hidden="false">
+        <div class="portrait float" aria-hidden="false">
+          <!-- Professional realistic T-shirt portrait: replace portrait.png with your image (transparent background recommended) -->
+          <img src="portrait.png" alt="Portrait of Venkata Raghavendra Kadiyala" loading="eager" id="portraitMain">
         </div>
+        <h1 class="hero-name">VENKATA RAGHAVENDRA <span style="color:var(--accent-teal)">KADIYALA</span></h1>
+        <div class="hero-tag">Mechanical Engineer & Creative Designer — Train interiors • CAD • FEA</div>
+
+        <div class="social-row">
+          <a class="btn linkedin" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank">LinkedIn</a>
+          <a class="btn instagram" href="https://www.instagram.com/raghukadiyala/" target="_blank">Instagram</a>
+          <a class="btn contact" href="mailto:venkata.france@gmail.com">Email</a>
+        </div>
+
+        <div style="margin-top:10px; color:var(--muted); font-weight:700">☎ +33 7 55 66 28 21 &nbsp; • &nbsp; venkata.france@gmail.com</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Panel 2: ABOUT / STORY -->
-    <section id="panel-2" class="panel" role="region" aria-label="About me">
-      <!-- background: subtle mid tone -->
-      <div class="stage">
-        <div class="story-card" role="article" aria-labelledby="storyTitle">
-          <div class="story-grid">
-            <div>
-              <div id="storyTitle" style="font-weight:900; font-size:20px; color:var(--text-dark)">About — À propos</div>
-              <h2 style="margin-top:12px; font-size:34px; font-weight:900; color:var(--text-dark)">Design-minded engineering — clarity and craft.</h2>
-              <p style="margin-top:18px;">
-                <strong>English:</strong> I combine mechanical engineering rigor with product-level design thinking. My work focuses on train interiors, component design and validated 3D model delivery (M0 → M5). I lead CAD teams, coordinate suppliers, and ensure manufacturability and user clarity.<br><br>
-                <strong>Français :</strong> J’allie rigueur mécanique et pensée produit. Mon travail porte sur l’aménagement ferroviaire, la conception de pièces et la livraison de modèles 3D validés (M0 → M5). Pilotage CAO, coordination fournisseurs et fabricabilité sont au cœur des projets.
-              </p>
+  <!-- ABOUT -->
+  <section id="p-1" class="panel" role="region" aria-label="About panel">
+    <div class="stage">
+      <div class="about-card" role="article" aria-labelledby="aboutTitle">
+        <div class="about-text">
+          <div id="aboutTitle" style="font-weight:900; font-size:20px; color:var(--text-dark)">About — À propos</div>
+          <h2 style="margin-top:12px; font-size:28px; font-weight:900">Design-minded engineering — clarity and craft</h2>
+          <p>
+            <strong>English:</strong> I combine mechanical engineering rigor with product design thinking. I deliver production-ready 3D models (M0 → M5), lead CAD teams, coordinate suppliers and ensure manufacturability and clear user-focused outcomes.<br><br>
+            <strong>Français :</strong> J’allie rigueur mécanique et pensée produit. Livraison de modèles 3D validés (M0 → M5), pilotage CAO, coordination fournisseurs et focus sur la fabricabilité et l’usage.
+          </p>
 
-              <div style="display:flex; gap:18px; margin-top:22px; flex-wrap:wrap;">
-                <div style="padding:16px; border-radius:12px; background:linear-gradient(180deg,#fff,#f6f7f8); box-shadow:0 14px 36px rgba(6,12,18,0.06)">
-                  <div style="font-weight:900; font-size:20px">5+</div>
-                  <div style="color:var(--muted); font-weight:700">Years experience</div>
-                </div>
-                <div style="padding:16px; border-radius:12px; background:linear-gradient(180deg,#fff,#f6f7f8); box-shadow:0 14px 36px rgba(6,12,18,0.06)">
-                  <div style="font-weight:900; font-size:20px">M0 → M5</div>
-                  <div style="color:var(--muted); font-weight:700">Model maturity</div>
-                </div>
-                <div style="padding:16px; border-radius:12px; background:linear-gradient(180deg,#fff,#f6f7f8); box-shadow:0 14px 36px rgba(6,12,18,0.06)">
-                  <div style="font-weight:900; font-size:20px">CAD & FEA</div>
-                  <div style="color:var(--muted); font-weight:700">CATIA V5 • Hyperworks</div>
-                </div>
-              </div>
-            </div>
-
-            <aside style="display:flex; align-items:center; justify-content:center;">
-              <div style="width:340px; padding:18px; border-radius:12px; background:linear-gradient(180deg,#fff,#f6f7f8); box-shadow:0 14px 36px rgba(6,12,18,0.06); text-align:center;">
-                <div style="font-weight:900; font-size:20px; color:var(--text-dark)">What I care about</div>
-                <div style="margin-top:12px; color:var(--muted); font-weight:700">Clarity • Manufacturability • Clean UX • Efficient CAD</div>
-              </div>
-            </aside>
+          <div class="highlights" aria-hidden="true">
+            <div class="stat"><div class="num">5+</div><div class="label" style="color:var(--muted);font-weight:700">Years experience</div></div>
+            <div class="stat"><div class="num">M0 → M5</div><div class="label" style="color:var(--muted);font-weight:700">Model maturity</div></div>
+            <div class="stat"><div class="num">CATIA V5</div><div class="label" style="color:var(--muted);font-weight:700">CAD & FEA</div></div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Panel 3: WORK - Project 1 (full-screen with sharp background) -->
-    <section id="panel-3" class="panel" role="region" aria-label="Project OSTA"
-      style="background-image: url('ai_osta.jpg');">
-      <!-- NOTE: replace ai_osta.jpg with the AI image for Project OSTA -->
-      <div class="stage">
-        <div class="work-content" role="article" aria-labelledby="p3title" style="text-align:center;">
-          <div id="p3title" class="work-title">SEGULA — Project OSTA</div>
-          <div class="work-sub">Front office • Train interior systems • M0 → M5 model maturity</div>
-          <p class="work-desc">Lead CAD deliveries for interior systems (windows, blinds, sidewalls, intercoms, electrical cabinets, under-seat systems). Supplier coordination and validation of production-ready 3D models.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Panel 4: WORK - Project 2 -->
-    <section id="panel-4" class="panel" role="region" aria-label="Project BaWu"
-      style="background-image: url('ai_bawu.jpg');">
-      <!-- NOTE: replace ai_bawu.jpg with the AI image for Project BaWu -->
-      <div class="stage">
-        <div class="work-content" role="article">
-          <div class="work-title">SEGULA — BaWu</div>
-          <div class="work-sub">Design validation, QA & CAD governance</div>
-          <p class="work-desc">3D validation workflows, proactive integration issue resolution, KPI/OIL tracking, and industrial handover support.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Panel 5: WORK - Project 3 -->
-    <section id="panel-5" class="panel" role="region" aria-label="SNCF FEA"
-      style="background-image: url('ai_scnf.jpg');">
-      <!-- NOTE: replace ai_scnf.jpg with the AI image for SNCF/FEA -->
-      <div class="stage">
-        <div class="work-content" role="article">
-          <div class="work-title">SNCF — FEA & Automation</div>
-          <div class="work-sub">Hyperworks / Optistruct • TCL scripting</div>
-          <p class="work-desc">Automation of bolted assemblies, mesh and static/non-static analysis for seat supports, plus structural validation and optimization.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Panel 6: CONTACT / CTA -->
-    <section id="panel-6" class="panel" role="region" aria-label="Contact"
-      style="background:linear-gradient(180deg,#071219,#031018);">
-      <div class="stage">
-        <div class="contact-card" role="contentinfo">
-          <h2>Let's build something exceptional — Parlons</h2>
-          <p style="margin-top:12px; color:rgba(238,246,248,0.92)">Email: <a href="mailto:venkata.france@gmail.com">venkata.france@gmail.com</a> — Phone: <a href="tel:+33755662821">+33 7 55 66 28 21</a></p>
-          <div style="margin-top:20px; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;">
-            <a class="btn-linkedin" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank" rel="noopener">LinkedIn</a>
-            <a class="btn-instagram" href="https://www.instagram.com/raghukadiyala/" target="_blank" rel="noopener">Instagram</a>
-            <a class="btn-primary" href="mailto:venkata.france@gmail.com" style="display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; font-weight:800; color:#072425; background:linear-gradient(90deg,var(--accent-teal),var(--accent-gold));">Email me</a>
+        <aside style="display:flex;align-items:center;justify-content:center">
+          <!-- optional subtle about background: replace ai_about.jpg if available -->
+          <div style="width:340px; height:260px; border-radius:12px; overflow:hidden; background:linear-gradient(180deg,#f6f7f8,#fff); box-shadow:0 12px 30px rgba(8,12,18,0.06); display:flex; align-items:center; justify-content:center">
+            <img src="ai_about.jpg" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.95" loading="lazy">
           </div>
-          <div style="margin-top:18px; color:rgba(238,246,248,0.6)">© <span id="year"></span> Venkata Raghavendra KADIYALA</div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCES: each experience gets its own panel. background image fills the panel (sharp) -->
+  <!-- SEGULA — Project OSTA -->
+  <section id="p-2" class="panel" role="region" aria-label="SEGULA Project OSTA"
+    style="background-image:url('ai_osta.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_osta.jpg');"></div>
+      <div class="work-card" role="article" style="backdrop-filter: blur(6px); background:linear-gradient(180deg, rgba(2,6,8,0.45), rgba(2,6,8,0.22));">
+        <div class="work-title">SEGULA — Project OSTA</div>
+        <div class="work-sub">Front office • Train interior systems • M0 → M5</div>
+        <p class="work-desc">Design and development of interior components (windows, blinds, sidewalls, intercoms, electrical cabinets, emergency handles, toilet piping, under-seat boxes). Delivery of validated 3D models (SAM) and coordination with suppliers and CDS Interiors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGULA — BaWu -->
+  <section id="p-3" class="panel" role="region" aria-label="SEGULA BaWu"
+    style="background-image:url('ai_bawu.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_bawu.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">SEGULA — BaWu</div>
+        <div class="work-sub">Validation & QA — Integration focus</div>
+        <p class="work-desc">3D design validation; identification and prevention of integration issues; QA management with KPI/OIL tracking; CAD governance and supplier validation processes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGULA — RER NG (Change request) -->
+  <section id="p-4" class="panel" role="region" aria-label="SEGULA RER NG"
+    style="background-image:url('ai_rerng.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_rerng.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">SEGULA — RER NG</div>
+        <div class="work-sub">Change request engineering & on-site surveys</div>
+        <p class="work-desc">Requirements analysis, mechanical integration resolution, on-site surveys, and structural part design in CATIA V5 with criticality reporting to client and industrial teams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGULA — DSB (Back office) -->
+  <section id="p-5" class="panel" role="region" aria-label="SEGULA DSB"
+    style="background-image:url('ai_dsb.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_dsb.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">SEGULA — DSB</div>
+        <div class="work-sub">Back office • Interior layout & integration</div>
+        <p class="work-desc">Interior layouts, seat arrangements, under-seat box design, cantilever and ceiling integration, and delivery of 3D/2D/FTA models with CDS Interiors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SNCF -->
+  <section id="p-6" class="panel" role="region" aria-label="SNCF"
+    style="background-image:url('ai_sncf.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_sncf.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">SNCF</div>
+        <div class="work-sub">FEA & Automation — Hyperworks / Optistruct</div>
+        <p class="work-desc">Automation of bolted assemblies using TCL; mesh, static and non-static analysis for seat supports (Thalys); modelling in CATIA V5 and validation of structural results.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAMIH -->
+  <section id="p-7" class="panel" role="region" aria-label="LAMIH"
+    style="background-image:url('ai_lamih.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_lamih.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">LAMIH</div>
+        <div class="work-sub">Behavioural analysis & safety concepts</div>
+        <p class="work-desc">Accident analysis, automated solutions for signalling and prevention, data analysis and concepts for autonomous trains (ETCS / CBTC).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PM DIMENSIONS -->
+  <section id="p-8" class="panel" role="region" aria-label="PM DIMENSIONS"
+    style="background-image:url('ai_pmdimensions.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_pmdimensions.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">PM DIMENSIONS</div>
+        <div class="work-sub">Part design & prototyping</div>
+        <p class="work-desc">Design and verification of mechanical parts, 3D CAD modelling (CATIA V5), prototype development and project support for clients (Hyundai).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Indian Railways internship -->
+  <section id="p-9" class="panel" role="region" aria-label="Indian Railways internship"
+    style="background-image:url('ai_indianrail.jpg'); background-size:cover; background-position:center;">
+    <div class="stage work-stage">
+      <div class="work-bg" aria-hidden="true" style="background-image:url('ai_indianrail.jpg');"></div>
+      <div class="work-card">
+        <div class="work-title">Indian Railways (Intern)</div>
+        <div class="work-sub">Prototype coupling & maintenance optimisation</div>
+        <p class="work-desc">Coupling prototype development, wagon inspection, maintenance optimisation and Ansys modelling / structural analysis.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="p-10" class="panel" role="region" aria-label="Education" style="background:linear-gradient(180deg,#fff,#f1f3f4);">
+    <div class="stage">
+      <div class="full-card">
+        <h2 style="margin:0; font-weight:900">Education — Formation</h2>
+        <div style="margin-top:16px; color:var(--muted); font-weight:700">
+          <div style="margin-bottom:8px;"><strong>Master</strong> — International Transport & Energy, INSA Hauts-de-France (2019 — 2021)</div>
+          <div><strong>Bachelor</strong> — Mechanical Engineering, KL University (2014 — 2018)</div>
+        </div>
+        <div style="margin-top:14px; color:var(--muted)">Selected project: Enhancement of Refrigeration Effect Using Flue Gases from Chimney — April 2018</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="p-11" class="panel" role="region" aria-label="Skills" style="background:linear-gradient(180deg,#fff,#f6f7f8);">
+    <div class="stage">
+      <div class="full-card">
+        <h2 style="margin:0; font-weight:900">Skills & Tools — Compétences</h2>
+        <div class="grid-tiles" style="margin-top:18px;">
+          <div style="padding:14px; border-radius:12px; background:#fff; min-width:180px; box-shadow:0 12px 36px rgba(8,12,18,0.06)"><strong>CATIA V5</strong></div>
+          <div style="padding:14px; border-radius:12px; background:#fff; min-width:180px; box-shadow:0 12px 36px rgba(8,12,18,0.06)"><strong>Ansys</strong></div>
+          <div style="padding:14px; border-radius:12px; background:#fff; min-width:180px; box-shadow:0 12px 36px rgba(8,12,18,0.06)"><strong>Hyperworks / Optistruct</strong></div>
+          <div style="padding:14px; border-radius:12px; background:#fff; min-width:180px; box-shadow:0 12px 36px rgba(8,12,18,0.06)"><strong>PDM / SAM / CDS Interiors</strong></div>
+          <div style="padding:14px; border-radius:12px; background:#fff; min-width:180px; box-shadow:0 12px 36px rgba(8,12,18,0.06)"><strong>C • Java • TCL</strong></div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </div>
+  <!-- CONTACT -->
+  <section id="p-12" class="panel" role="region" aria-label="Contact" style="background:linear-gradient(180deg,#071219,#031018);">
+    <div class="stage">
+      <div class="contact-card" style="text-align:center; padding:36px; border-radius:12px;">
+        <h2 style="margin:0; color:#eef6f8; font-weight:900">Let's build something exceptional — Parlons</h2>
+        <p style="margin-top:14px; color:rgba(238,246,248,0.9)">Email: <a href="mailto:venkata.france@gmail.com" style="color:#fff">venkata.france@gmail.com</a> — Phone: <a href="tel:+33755662821" style="color:#fff">+33 7 55 66 28 21</a></p>
+        <div style="margin-top:18px; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;">
+          <a class="btn linkedin" href="https://www.linkedin.com/in/venkata-kadiyala" target="_blank">LinkedIn</a>
+          <a class="btn instagram" href="https://www.instagram.com/raghukadiyala/" target="_blank">Instagram</a>
+          <a class="btn contact" href="mailto:venkata.france@gmail.com">Email me</a>
+        </div>
+        <div style="margin-top:18px; color:rgba(238,246,248,0.6)">© <span id="year"></span> Venkata Raghavendra KADIYALA</div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <script>
-/*
-  Behavior:
-  - Panels are stacked absolute; JS shows one at a time by toggling .active
-  - Wheel / touch / keyboard navigate between panels (snapping)
-  - Background images are full-bleed; replace ai_*.jpg and photo.png with real AI outputs
-*/
+/* Panel controller: shows exactly one panel at a time, keyboard/wheel/touch navigation,
+   panel transition is locked while animating to avoid overlap. Panels are absolute, so
+   user never sees other panels while current is active. */
 
-/* Panel navigation */
 (function(){
-  const panelIds = ['panel-1','panel-2','panel-3','panel-4','panel-5','panel-6'];
-  const panels = panelIds.map(id => document.getElementById(id));
+  const ids = [
+    'p-0','p-1','p-2','p-3','p-4','p-5','p-6','p-7','p-8','p-9','p-10','p-11','p-12'
+  ];
+  const panels = ids.map(id => document.getElementById(id));
   let index = 0;
   let animating = false;
-  const ms = 700;
+  const duration = 720;
 
-  function show(i, smooth=true){
+  function show(i){
     if(i < 0 || i >= panels.length) return;
     if(animating) return;
     animating = true;
-    // hide all first
     panels.forEach((p, idx) => {
       if(idx === i){
         p.classList.add('active');
-        // Bring to front
-        p.style.zIndex = 10;
+        p.style.zIndex = 20;
+        // add active class for work-stage background subtle zoom
+        const ws = p.querySelector('.work-stage');
+        if(ws) ws.classList.add('active');
       } else {
         p.classList.remove('active');
-        // push behind
         p.style.zIndex = 1;
+        const ws = p.querySelector('.work-stage');
+        if(ws) ws.classList.remove('active');
       }
     });
     index = i;
-    // After transition duration, allow navigation again
-    setTimeout(()=>{ animating = false; }, ms + 60);
-    // update topbar color for dark panels
-    updateTopbar(i);
+    // small delay + reserve for animation
+    setTimeout(()=> animating = false, duration + 80);
   }
 
-  // initial show
-  show(0,false);
+  // init
+  show(0);
 
-  // map wheel / touch to next/prev
-  let wheelThrottle = false;
+  // wheel navigation (throttle)
+  let wheelLock = false;
   window.addEventListener('wheel', (e) => {
-    if(wheelThrottle || animating) return;
-    wheelThrottle = true;
-    setTimeout(()=> wheelThrottle = false, 400);
-    if(e.deltaY > 10) next();
-    if(e.deltaY < -10) prev();
+    if(wheelLock || animating) return;
+    wheelLock = true;
+    setTimeout(()=> wheelLock = false, 400);
+    if(e.deltaY > 8) next();
+    if(e.deltaY < -8) prev();
   }, {passive:true});
 
-  // keyboard nav
+  // keyboard navigation
   window.addEventListener('keydown', (e) => {
     if(e.key === 'ArrowDown' || e.key === 'PageDown') next();
     if(e.key === 'ArrowUp' || e.key === 'PageUp') prev();
     if(e.key === 'Home') show(0);
-    if(e.key === 'End') show(panels.length - 1);
+    if(e.key === 'End') show(panels.length-1);
   });
 
-  // touch support: swipe up/down
-  let touchStartY = null;
-  window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive:true});
-  window.addEventListener('touchend', (e) => {
-    if(touchStartY === null) return;
-    const dy = (e.changedTouches[0].clientY - touchStartY);
+  // touch swipe
+  let startY = null;
+  window.addEventListener('touchstart', (ev) => { startY = ev.touches[0].clientY; }, {passive:true});
+  window.addEventListener('touchend', (ev) => {
+    if(startY === null) return;
+    const dy = ev.changedTouches[0].clientY - startY;
     if(Math.abs(dy) > 60){
       if(dy < 0) next();
       else prev();
     }
-    touchStartY = null;
+    startY = null;
   }, {passive:true});
 
-  function next(){ show(Math.min(panels.length-1, index+1)); }
-  function prev(){ show(Math.max(0, index-1)); }
+  function next(){ show(Math.min(panels.length - 1, index + 1)); }
+  function prev(){ show(Math.max(0, index - 1)); }
 
-  // clickable topbar links could jump to a panel if you add handlers; example:
-  // (not included to keep nav minimal)
-  // function gotoPanel(n){ show(n); }
+  // clickable navigation (optional) — map topbar LinkedIn to keep visible; don't change panels.
+  // set year
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Update topbar appearance for readability (light vs dark)
-  function updateTopbar(i){
-    const topbar = document.getElementById('topbar');
-    // panels 3..6 are darker (work + contact) so make topbar dark
-    if(i >= 3) topbar.classList.add('dark');
-    else topbar.classList.remove('dark');
+  // graceful fallback: if portrait fails to load, show initials floating block
+  const portrait = document.getElementById('portraitMain');
+  if(portrait){
+    portrait.addEventListener('error', function(){
+      const wrap = portrait.parentElement;
+      wrap.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-teal),var(--accent-gold));color:#052425;font-weight:900;font-size:64px;">VR</div>';
+    });
   }
-})();
 
-/* small helper: if portrait fails to load, show initials */
-(function(){
-  const img = document.getElementById('portraitImg');
-  if(!img) return;
-  img.addEventListener('error', function(){
-    const wrapper = img.parentElement;
-    wrapper.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-teal),var(--accent-gold));color:#052425;font-weight:900;font-size:64px;">VR</div>';
-  });
 })();
-
-/* set current year */
-document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
